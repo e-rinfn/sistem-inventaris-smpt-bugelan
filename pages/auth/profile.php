@@ -3,7 +3,7 @@
 require_once '../../config/database.php';
 require_once '../../includes/auth_check.php';
 
-$pdo = getPDO();
+
 $id_pengguna = $_SESSION['id_pengguna'];
 
 // Get user data

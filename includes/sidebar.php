@@ -100,6 +100,13 @@ function isActive($path)
       </a>
     </li>
 
+    <li class="menu-item <?= isActive('/transaksi/kembali') ?>">
+      <a href="<?= $base_url ?>/pages/transaksi/kembali/index.php" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-undo"></i>
+        <div>Pengembalian Barang</div>
+      </a>
+    </li>
+
     <li class="menu-item <?= isActive('/transaksi/hilang') ?>">
       <a href="<?= $base_url ?>/pages/transaksi/hilang/index.php" class="menu-link">
         <i class="menu-icon tf-icons bx bxs-error-circle"></i>

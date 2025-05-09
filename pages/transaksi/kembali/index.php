@@ -2,17 +2,16 @@
 require_once '../../../includes/auth_check.php';
 require_once '../../../config/database.php';
 
-
-// Query untuk mendapatkan data barang keluar dengan info pengembalian
+// Query untuk mendapatkan data barang kembali
 $query = "SELECT bk.*, b.kode_barang, b.nama_barang, p.nama_lengkap AS operator,
-            (SELECT COALESCE(SUM(bk2.jumlah), 0) 
-             FROM barang_kembali bk2 
-             WHERE bk2.id_keluar = bk.id_keluar) AS jumlah_kembali
-          FROM barang_keluar bk
+           bk2.tanggal_keluar, bk2.penerima, bk2.keperluan
+          FROM barang_kembali bk
           JOIN barang b ON bk.id_barang = b.id_barang
           JOIN pengguna p ON bk.id_pengguna = p.id_pengguna
-          ORDER BY bk.tanggal_keluar DESC, bk.dibuat_pada DESC";
-$transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
+          JOIN barang_keluar bk2 ON bk.id_keluar = bk2.id_keluar
+          ORDER BY bk.tanggal_kembali DESC, bk.dibuat_pada DESC";
+$transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
+?>
 
 <!DOCTYPE html>
 
@@ -110,10 +109,7 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
 
                     <div class="container-xxl flex-grow-1 container-p-y">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h2>Data Barang Keluar</h2>
-                            <a href="tambah.php" class="btn btn-primary">
-                                <i class="bx bx-plus-circle"></i> Tambah Barang Keluar
-                            </a>
+                            <h2>Data Barang Kembali</h2>
                         </div>
 
                         <?php if (isset($_GET['success'])): ?>
@@ -127,64 +123,60 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal</th>
+                                                <th>Tgl Kembali</th>
+                                                <th>Tgl Keluar</th>
                                                 <th>Kode Barang</th>
                                                 <th>Nama Barang</th>
                                                 <th>Jumlah</th>
-                                                <th>Dikembalikan</th>
-                                                <th>Status</th>
                                                 <th>Penerima</th>
-                                                <th>Keperluan</th>
+                                                <th>Kondisi</th>
                                                 <th>Operator</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php foreach ($transaksi as $key => $trx): ?>
-                                                <?php
-                                                $status_text = ($trx['jumlah_kembali'] >= $trx['jumlah']) ? 'Selesai' : 'Belum Kembali';
-                                                $status_class = ($trx['jumlah_kembali'] >= $trx['jumlah']) ? 'success' : 'warning';
-                                                ?>
                                                 <tr>
                                                     <td><?= $key + 1 ?></td>
+                                                    <td><?= date('d/m/Y', strtotime($trx['tanggal_kembali'])) ?></td>
                                                     <td><?= date('d/m/Y', strtotime($trx['tanggal_keluar'])) ?></td>
                                                     <td><?= $trx['kode_barang'] ?></td>
                                                     <td><?= $trx['nama_barang'] ?></td>
                                                     <td><?= $trx['jumlah'] ?></td>
-                                                    <td><?= $trx['jumlah_kembali'] ?></td>
-                                                    <td><span class="badge bg-<?= $status_class ?>"> <?= $status_text ?> </span></td>
                                                     <td><?= $trx['penerima'] ?? '-' ?></td>
-                                                    <td><?= $trx['keperluan'] ?? '-' ?></td>
+                                                    <td>
+                                                        <span class="badge bg-<?=
+                                                                                $trx['kondisi'] == 'baik' ? 'success' : ($trx['kondisi'] == 'rusak_ringan' ? 'warning' : 'danger')
+                                                                                ?>">
+                                                            <?= ucfirst($trx['kondisi']) ?>
+                                                        </span>
+                                                    </td>
                                                     <td><?= $trx['operator'] ?></td>
                                                     <td>
-                                                        <div class="btn-group btn-group-sm" role="group">
-                                                            <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal<?= $trx['id_keluar'] ?>" title="Detail">
-                                                                <i class="bx bx-info-circle"></i>
-                                                            </a>
-                                                            <a href="edit.php?id=<?= $trx['id_keluar'] ?>" class="btn btn-warning" title="Edit">
-                                                                <i class="bx bx-pencil"></i>
-                                                            </a>
-                                                            <a href="../kembali/tambah.php?id=<?= $trx['id_keluar'] ?>" class="btn btn-success" title="Kembalikan">
-                                                                <i class="bx bx-undo"></i>
-                                                            </a>
-                                                            <a href="hapus.php?id=<?= $trx['id_keluar'] ?>" class="btn btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus data ini? Stok barang akan ditambahkan kembali.')">
-                                                                <i class="bx bx-trash"></i>
-                                                            </a>
-                                                        </div>
+                                                        <a href="#" class="btn btn-info btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#detailModal<?= $trx['id_kembali'] ?>"
+                                                            title="Detail">
+                                                            <i class="bx bx-info-circle"></i>
+                                                        </a>
                                                     </td>
                                                 </tr>
 
                                                 <!-- Modal Detail -->
-                                                <div class="modal fade" id="detailModal<?= $trx['id_keluar'] ?>" tabindex="-1">
+                                                <div class="modal fade" id="detailModal<?= $trx['id_kembali'] ?>" tabindex="-1">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title">Detail Barang Keluar</h5>
+                                                                <h5 class="modal-title">Detail Barang Kembali</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
                                                                 <div class="row mb-2">
-                                                                    <div class="col-4 fw-bold">Tanggal</div>
+                                                                    <div class="col-4 fw-bold">Tanggal Kembali</div>
+                                                                    <div class="col-8"><?= date('d/m/Y', strtotime($trx['tanggal_kembali'])) ?></div>
+                                                                </div>
+                                                                <div class="row mb-2">
+                                                                    <div class="col-4 fw-bold">Tanggal Keluar</div>
                                                                     <div class="col-8"><?= date('d/m/Y', strtotime($trx['tanggal_keluar'])) ?></div>
                                                                 </div>
                                                                 <div class="row mb-2">
@@ -192,18 +184,8 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
                                                                     <div class="col-8"><?= $trx['kode_barang'] ?> - <?= $trx['nama_barang'] ?></div>
                                                                 </div>
                                                                 <div class="row mb-2">
-                                                                    <div class="col-4 fw-bold">Jumlah Keluar</div>
+                                                                    <div class="col-4 fw-bold">Jumlah</div>
                                                                     <div class="col-8"><?= $trx['jumlah'] ?></div>
-                                                                </div>
-                                                                <div class="row mb-2">
-                                                                    <div class="col-4 fw-bold">Sudah Kembali</div>
-                                                                    <div class="col-8"><?= $trx['jumlah_kembali'] ?></div>
-                                                                </div>
-                                                                <div class="row mb-2">
-                                                                    <div class="col-4 fw-bold">Status</div>
-                                                                    <div class="col-8">
-                                                                        <span class="badge bg-<?= $status_class ?>"> <?= $status_text ?> </span>
-                                                                    </div>
                                                                 </div>
                                                                 <div class="row mb-2">
                                                                     <div class="col-4 fw-bold">Penerima</div>
@@ -214,8 +196,14 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
                                                                     <div class="col-8"><?= $trx['keperluan'] ?? '-' ?></div>
                                                                 </div>
                                                                 <div class="row mb-2">
-                                                                    <div class="col-4 fw-bold">Operator</div>
-                                                                    <div class="col-8"><?= $trx['operator'] ?></div>
+                                                                    <div class="col-4 fw-bold">Kondisi</div>
+                                                                    <div class="col-8">
+                                                                        <span class="badge bg-<?=
+                                                                                                $trx['kondisi'] == 'baik' ? 'success' : ($trx['kondisi'] == 'rusak_ringan' ? 'warning' : 'danger')
+                                                                                                ?>">
+                                                                            <?= ucfirst($trx['kondisi']) ?>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                                 <div class="row mb-2">
                                                                     <div class="col-4 fw-bold">Keterangan</div>
@@ -231,7 +219,6 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
                                             <?php endforeach; ?>
                                         </tbody>
                                     </table>
-
                                 </div>
                             </div>
                         </div>
