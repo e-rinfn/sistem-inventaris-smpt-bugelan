@@ -103,7 +103,7 @@ function isActive($path)
     <li class="menu-item <?= isActive('/transaksi/kembali') ?>">
       <a href="<?= $base_url ?>/pages/transaksi/kembali/index.php" class="menu-link">
         <i class="menu-icon tf-icons bx bx-undo"></i>
-        <div>Pengembalian Barang</div>
+        <div>Barang Kembali</div>
       </a>
     </li>
 
