@@ -23,7 +23,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
 
             <!-- Notifikasi Barang Stok Rendah -->
             <!-- <li class="nav-item dropdown me-3 border rounded m-2">
-                <a class="nav-link dropdown-toggle hide-arrow" href="<?= $base_path ?>/barang/index.php">
+                <a class="nav-link dropdown-toggle hide-arrow" href="<?= $base_url ?>/barang/index.php">
                     <i class="bx bx-line-chart-down bx-sm"></i>
                     <?php if ($stokRendahCount > 0): ?>
                         <span class="badge bg-danger rounded-pill badge-notifications">
@@ -72,7 +72,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="<?= $base_path ?>/auth/profile.php">
+                        <a class="dropdown-item" href="<?= $base_url ?>/auth/profile.php">
                             <i class="bx bx-user me-2"></i>
                             <span class="align-middle">My Profile</span>
                         </a>
@@ -80,7 +80,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
 
                     <?php if ($_SESSION['role'] === 'admin'): ?>
                         <li>
-                            <a class="dropdown-item" href="<?= $base_path ?>/pengguna">
+                            <a class="dropdown-item" href="<?= $base_url ?>/pengguna">
                                 <i class="bx bx-cog me-2"></i>
                                 <span class="align-middle">Kelola Pengguna</span>
                             </a>
@@ -91,7 +91,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="<?= $base_path ?>/auth/logout.php">
+                        <a class="dropdown-item" href="<?= $base_url ?>/auth/logout.php">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">Log Out</span>
                         </a>
