@@ -135,7 +135,7 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
                         <h3 class="card-title mb-2"><?= $total_barang ?></h3>
                       </div>
                       <div class="card-footer bg-transparent border-top-0">
-                        <a href="../barang/" class="text-dark stretched-link">Lihat detail</a>
+                        <a href="../barang/index.php" class="text-dark stretched-link">Lihat detail</a>
                       </div>
                     </div>
                   </div>
@@ -153,7 +153,7 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
                         <h3 class="card-title mb-2"><?= $total_kategori ?></h3>
                       </div>
                       <div class="card-footer bg-transparent border-top-0">
-                        <a href="../kategori/" class="text-dark stretched-link">Lihat detail</a>
+                        <a href="../kategori/index.php" class="text-dark stretched-link">Lihat detail</a>
                       </div>
                     </div>
                   </div>
@@ -171,7 +171,7 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
                         <h3 class="card-title mb-2"><?= $transaksi['masuk'] ?></h3>
                       </div>
                       <div class="card-footer bg-transparent border-top-0">
-                        <a href="../transaksi/masuk" class="text-dark stretched-link">Lihat detail</a>
+                        <a href="../transaksi/masuk/index.php" class="text-dark stretched-link">Lihat detail</a>
                       </div>
                     </div>
                   </div>
@@ -196,9 +196,6 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
 
                 </div>
               </div>
-
-
-
 
               <!-- Riwayat inventaris -->
               <div class="col-12 col-lg-6 order-2 order-md-3 order-lg-2 mb-4">
@@ -288,7 +285,7 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                   </div>
                   <div class="card-footer">
-                    <a href="modules/laporan/transaksi.php" class="btn btn-sm btn-outline-primary">
+                    <a href="<?= $base_url ?>/pages/laporan/transaksi.php" class="btn btn-sm btn-outline-primary">
                       Lihat Semua <i class="bi bi-arrow-right"></i>
                     </a>
                   </div>

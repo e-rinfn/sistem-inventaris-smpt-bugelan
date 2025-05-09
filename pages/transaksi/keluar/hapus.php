@@ -3,7 +3,7 @@ require_once '../../../includes/auth_check.php';
 require_once '../../../config/database.php';
 
 if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'staff') {
-    header("Location: ../../../dashboard.php");
+    header("Location: ../../dashboard/index.php");
     exit();
 }
 

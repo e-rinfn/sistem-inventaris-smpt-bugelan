@@ -80,7 +80,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
 
                     <?php if ($_SESSION['role'] === 'admin'): ?>
                         <li>
-                            <a class="dropdown-item" href="<?= $base_url ?>/pages/pengguna">
+                            <a class="dropdown-item" href="<?= $base_url ?>/pages/pengguna/index.php">
                                 <i class="bx bx-cog me-2"></i>
                                 <span class="align-middle">Kelola Pengguna</span>
                             </a>

@@ -4,7 +4,7 @@ require_once '../../../config/database.php';
 
 // Hanya admin dan staff yang bisa menghapus
 if ($_SESSION['role'] !== 'admin' && $_SESSION['role'] !== 'staff') {
-    header("Location: ../../../dashboard.php");
+    header("Location: ../../dashboard/index.php");
     exit();
 }
 
