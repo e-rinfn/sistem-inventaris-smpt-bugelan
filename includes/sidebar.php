@@ -94,7 +94,7 @@ function isActive($path)
 
     <!-- Dashboard -->
     <li class="menu-item <?= isActive('/transaksi/masuk') ?>">
-      <a href="<?= $base_url ?>/pages/transaksi/masuk" class="menu-link">
+      <a href="<?= $base_url ?>/pages/transaksi/masuk/index.php" class="menu-link">
         <i class="menu-icon tf-icons bx bx-import"></i>
         <div data-i18n="Analytics">Barang Masuk</div>
       </a>
@@ -102,14 +102,14 @@ function isActive($path)
 
     <!-- Dashboard -->
     <li class="menu-item <?= isActive('/transaksi/keluar') ?>">
-      <a href="<?= $base_url ?>/pages/transaksi/keluar" class="menu-link">
+      <a href="<?= $base_url ?>/pages/transaksi/keluar/index.php" class="menu-link">
         <i class="menu-icon tf-icons bx bx-export"></i>
         <div data-i18n="Analytics">Barang Keluar</div>
       </a>
     </li>
 
     <li class="menu-item <?= isActive('/transaksi/hilang') ?>">
-      <a href="<?= $base_url ?>/pages/transaksi/hilang" class="menu-link">
+      <a href="<?= $base_url ?>/pages/transaksi/hilang/index.php" class="menu-link">
         <i class="menu-icon tf-icons bx bxs-error-circle"></i>
         <div data-i18n="Analytics">Barang Hilang</div>
       </a>

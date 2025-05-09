@@ -40,7 +40,7 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- Header start -->
 
-<?php include '../header.php'; ?>
+<?php include '../../../header.php'; ?>
 
 <!-- Header end -->
 
