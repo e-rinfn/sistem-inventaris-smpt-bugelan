@@ -1,3 +1,3 @@
 <?php
-header("Location: pages/dashboard");
+header("Location: ./pages/auth/login.php");
 exit;

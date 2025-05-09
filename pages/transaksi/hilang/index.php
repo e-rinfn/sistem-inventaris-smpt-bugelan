@@ -15,34 +15,11 @@ $barang_hilang = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="en" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default" data-assets-path="../../../assets/" data-template="vertical-menu-template-free">
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amba Kue - Inventory</title>
-    <meta name="description" content="Laporan Barang Hilang" />
+<!-- Header start -->
 
+<?php include '../header.php'; ?>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet" />
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="../../../assets/vendor/fonts/boxicons.css" />
-
-    <!-- Core CSS -->
-    <link rel="stylesheet" href="../../../assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="../../../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="../../../assets/css/demo.css" />
-
-    <!-- Vendor CSS -->
-    <link rel="stylesheet" href="../../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-    <link rel="stylesheet" href="../../../assets/vendor/libs/apex-charts/apex-charts.css" />
-
-    <!-- Helpers -->
-    <script src="../../../assets/vendor/js/helpers.js"></script>
-    <script src="../../../assets/js/config.js"></script>
-</head>
+<!-- Header end -->
 
 <body>
     <div class="layout-wrapper layout-content-navbar">
