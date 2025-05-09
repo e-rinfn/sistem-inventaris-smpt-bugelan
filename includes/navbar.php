@@ -72,7 +72,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="<?= $base_url ?>/auth/profile.php">
+                        <a class="dropdown-item" href="<?= $base_url ?>/pages/auth/profile.php">
                             <i class="bx bx-user me-2"></i>
                             <span class="align-middle">My Profile</span>
                         </a>
@@ -80,7 +80,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
 
                     <?php if ($_SESSION['role'] === 'admin'): ?>
                         <li>
-                            <a class="dropdown-item" href="<?= $base_url ?>/pengguna">
+                            <a class="dropdown-item" href="<?= $base_url ?>/pages/pengguna">
                                 <i class="bx bx-cog me-2"></i>
                                 <span class="align-middle">Kelola Pengguna</span>
                             </a>
@@ -91,7 +91,7 @@ $stokRendahList = $stmtList->fetchAll(PDO::FETCH_ASSOC);
                         <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="<?= $base_url ?>/auth/logout.php">
+                        <a class="dropdown-item" href="<?= $base_url ?>/pages/auth/logout.php">
                             <i class="bx bx-power-off me-2"></i>
                             <span class="align-middle">Log Out</span>
                         </a>

@@ -102,7 +102,7 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
                         <h5 class="card-title text-warning">Selamat datang, <?= htmlspecialchars($_SESSION['nama_lengkap']) ?>!</h5>
                         <hr>
                         <div class="d-flex justify-content-end">
-                          <img src="/inventaris_smpt_bugelan/assets/img/illustrations/InventoryManagement.jpg" width="250px" alt="">
+                          <img src="<?= $base_url ?>/assets/img/illustrations/InventoryManagement.jpg" width="250px" alt="">
                         </div>
                         <p class="mb-3 mt-3" style="text-align: justify; text-indent: 30px;">
                           Aplikasi inventaris barang adalah sebuah sistem berbasis web yang digunakan untuk mencatat, mengelola, dan memantau
@@ -242,7 +242,7 @@ $riwayat_transaksi = $pdo->query($query_riwayat)->fetchAll(PDO::FETCH_ASSOC);
                     <?php endif; ?>
                   </div>
                   <div class="card-footer">
-                    <a href="/inventaris_smpt_bugelan/pages/barang/index.php?filter=stok_minimum" class="btn btn-sm btn-outline-danger">
+                    <a href="<?= $base_url ?>/pages/barang/index.php" class="btn btn-sm btn-outline-danger">
                       Lihat Semua <i class="bi bi-arrow-right"></i>
                     </a>
                   </div>
