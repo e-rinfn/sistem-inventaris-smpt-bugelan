@@ -45,7 +45,7 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC);
         name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Amba Kue - Invnetory</title>
+    <title>Sistem Inventaris SMPT Bugelan</title>
 
     <meta name="description" content="" />
 

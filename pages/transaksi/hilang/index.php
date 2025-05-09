@@ -18,7 +18,7 @@ $barang_hilang = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amba Kue - Inventory</title>
+    <title>Sistem Inventaris SMPT Bugelan</title>
     <meta name="description" content="Laporan Barang Hilang" />
 
 
