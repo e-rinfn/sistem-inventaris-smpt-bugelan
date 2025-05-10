@@ -11,25 +11,30 @@ $search = isset($_GET['search']) ? $_GET['search'] : '';
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
 
 // Query untuk data transaksi
+// Query untuk data transaksi
+$params = [];
+$query = "";
+
 if ($jenis == 'masuk') {
     $query = "SELECT 
                 bm.*, 
                 b.kode_barang, 
                 b.nama_barang, 
-                s.nama_supplier, 
+                COALESCE(s.nama_supplier, '-') AS nama_supplier, 
                 p.nama_lengkap AS operator,
-                bm.tanggal_masuk AS tanggal  -- Tambahkan alias untuk kolom tanggal
+                bm.tanggal_masuk AS tanggal,
+                'masuk' AS jenis
               FROM barang_masuk bm
               JOIN barang b ON bm.id_barang = b.id_barang
               LEFT JOIN supplier s ON bm.id_supplier = s.id_supplier
               JOIN pengguna p ON bm.id_pengguna = p.id_pengguna
               WHERE bm.tanggal_masuk BETWEEN ? AND ?";
 
+    $params = [$tanggal_awal, $tanggal_akhir];
+
     if (!empty($barang)) {
         $query .= " AND bm.id_barang = ?";
-        $params = [$tanggal_awal, $tanggal_akhir, $barang];
-    } else {
-        $params = [$tanggal_awal, $tanggal_akhir];
+        $params[] = $barang;
     }
 
     $query .= " ORDER BY bm.tanggal_masuk DESC";
@@ -38,18 +43,20 @@ if ($jenis == 'masuk') {
                 bk.*, 
                 b.kode_barang, 
                 b.nama_barang, 
+                COALESCE(bk.penerima, '-') AS nama_supplier, 
                 p.nama_lengkap AS operator,
-                bk.tanggal_keluar AS tanggal  -- Tambahkan alias untuk kolom tanggal
+                bk.tanggal_keluar AS tanggal,
+                'keluar' AS jenis
               FROM barang_keluar bk
               JOIN barang b ON bk.id_barang = b.id_barang
               JOIN pengguna p ON bk.id_pengguna = p.id_pengguna
               WHERE bk.tanggal_keluar BETWEEN ? AND ?";
 
+    $params = [$tanggal_awal, $tanggal_akhir];
+
     if (!empty($barang)) {
         $query .= " AND bk.id_barang = ?";
-        $params = [$tanggal_awal, $tanggal_akhir, $barang];
-    } else {
-        $params = [$tanggal_awal, $tanggal_akhir];
+        $params[] = $barang;
     }
 
     $query .= " ORDER BY bk.tanggal_keluar DESC";
@@ -58,18 +65,20 @@ if ($jenis == 'masuk') {
                 bh.*, 
                 b.kode_barang, 
                 b.nama_barang, 
+                '-' AS nama_supplier, 
                 p.nama_lengkap AS operator,
-                bh.tanggal_hilang AS tanggal  -- Tambahkan alias untuk kolom tanggal
+                bh.tanggal_hilang AS tanggal,
+                'hilang' AS jenis
               FROM barang_hilang bh
               JOIN barang b ON bh.id_barang = b.id_barang
               JOIN pengguna p ON bh.id_pengguna = p.id_pengguna
               WHERE bh.tanggal_hilang BETWEEN ? AND ?";
 
+    $params = [$tanggal_awal, $tanggal_akhir];
+
     if (!empty($barang)) {
         $query .= " AND bh.id_barang = ?";
-        $params = [$tanggal_awal, $tanggal_akhir, $barang];
-    } else {
-        $params = [$tanggal_awal, $tanggal_akhir];
+        $params[] = $barang;
     }
 
     $query .= " ORDER BY bh.tanggal_hilang DESC";
@@ -77,15 +86,15 @@ if ($jenis == 'masuk') {
     // Default: tampilkan semua jenis transaksi
     $query = "(
                 SELECT 
-                    'masuk' AS jenis, 
                     bm.id_masuk AS id_transaksi, 
-                    bm.tanggal_masuk AS tanggal,  -- Pastikan menggunakan alias yang konsisten
+                    bm.tanggal_masuk AS tanggal, 
                     b.kode_barang, 
                     b.nama_barang, 
                     bm.jumlah, 
                     'Masuk' AS keterangan,
-                    s.nama_supplier,
-                    p.nama_lengkap AS operator
+                    COALESCE(s.nama_supplier, '-') AS nama_supplier,
+                    p.nama_lengkap AS operator,
+                    'masuk' AS jenis
                 FROM barang_masuk bm
                 JOIN barang b ON bm.id_barang = b.id_barang
                 LEFT JOIN supplier s ON bm.id_supplier = s.id_supplier
@@ -95,15 +104,15 @@ if ($jenis == 'masuk') {
               UNION ALL
               (
                 SELECT 
-                    'keluar' AS jenis, 
                     bk.id_keluar AS id_transaksi, 
-                    bk.tanggal_keluar AS tanggal,  -- Pastikan menggunakan alias yang konsisten
+                    bk.tanggal_keluar AS tanggal, 
                     b.kode_barang, 
                     b.nama_barang, 
                     bk.jumlah, 
-                    CONCAT('Keluar - ', bk.keperluan) AS keterangan,
-                    bk.penerima AS nama_supplier,
-                    p.nama_lengkap AS operator
+                    CONCAT('Keluar - ', COALESCE(bk.keperluan, '-')) AS keterangan,
+                    COALESCE(bk.penerima, '-') AS nama_supplier,
+                    p.nama_lengkap AS operator,
+                    'keluar' AS jenis
                 FROM barang_keluar bk
                 JOIN barang b ON bk.id_barang = b.id_barang
                 JOIN pengguna p ON bk.id_pengguna = p.id_pengguna
@@ -112,33 +121,42 @@ if ($jenis == 'masuk') {
               UNION ALL
               (
                 SELECT 
-                    'hilang' AS jenis, 
                     bh.id_hilang AS id_transaksi, 
-                    bh.tanggal_hilang AS tanggal,  -- Pastikan menggunakan alias yang konsisten
+                    bh.tanggal_hilang AS tanggal, 
                     b.kode_barang, 
                     b.nama_barang, 
                     bh.jumlah, 
-                    CONCAT('Hilang - ', bh.keterangan) AS keterangan,
-                    NULL AS nama_supplier,
-                    p.nama_lengkap AS operator
+                    CONCAT('Hilang - ', COALESCE(bh.keterangan, '-')) AS keterangan,
+                    '-' AS nama_supplier,
+                    p.nama_lengkap AS operator,
+                    'hilang' AS jenis
                 FROM barang_hilang bh
                 JOIN barang b ON bh.id_barang = b.id_barang
                 JOIN pengguna p ON bh.id_pengguna = p.id_pengguna
                 WHERE bh.tanggal_hilang BETWEEN ? AND ?
               )";
 
+    $params = [
+        $tanggal_awal,
+        $tanggal_akhir,
+        $tanggal_awal,
+        $tanggal_akhir,
+        $tanggal_awal,
+        $tanggal_akhir
+    ];
+
     if (!empty($barang)) {
         $query = "(
                     SELECT 
-                        'masuk' AS jenis, 
                         bm.id_masuk AS id_transaksi, 
                         bm.tanggal_masuk AS tanggal, 
                         b.kode_barang, 
                         b.nama_barang, 
                         bm.jumlah, 
                         'Masuk' AS keterangan,
-                        s.nama_supplier,
-                        p.nama_lengkap AS operator
+                        COALESCE(s.nama_supplier, '-') AS nama_supplier,
+                        p.nama_lengkap AS operator,
+                        'masuk' AS jenis
                     FROM barang_masuk bm
                     JOIN barang b ON bm.id_barang = b.id_barang
                     LEFT JOIN supplier s ON bm.id_supplier = s.id_supplier
@@ -148,15 +166,15 @@ if ($jenis == 'masuk') {
                   UNION ALL
                   (
                     SELECT 
-                        'keluar' AS jenis, 
                         bk.id_keluar AS id_transaksi, 
                         bk.tanggal_keluar AS tanggal, 
                         b.kode_barang, 
                         b.nama_barang, 
                         bk.jumlah, 
-                        CONCAT('Keluar - ', bk.keperluan) AS keterangan,
-                        bk.penerima AS nama_supplier,
-                        p.nama_lengkap AS operator
+                        CONCAT('Keluar - ', COALESCE(bk.keperluan, '-')) AS keterangan,
+                        COALESCE(bk.penerima, '-') AS nama_supplier,
+                        p.nama_lengkap AS operator,
+                        'keluar' AS jenis
                     FROM barang_keluar bk
                     JOIN barang b ON bk.id_barang = b.id_barang
                     JOIN pengguna p ON bk.id_pengguna = p.id_pengguna
@@ -165,15 +183,15 @@ if ($jenis == 'masuk') {
                   UNION ALL
                   (
                     SELECT 
-                        'hilang' AS jenis, 
                         bh.id_hilang AS id_transaksi, 
                         bh.tanggal_hilang AS tanggal, 
                         b.kode_barang, 
                         b.nama_barang, 
                         bh.jumlah, 
-                        CONCAT('Hilang - ', bh.keterangan) AS keterangan,
-                        NULL AS nama_supplier,
-                        p.nama_lengkap AS operator
+                        CONCAT('Hilang - ', COALESCE(bh.keterangan, '-')) AS keterangan,
+                        '-' AS nama_supplier,
+                        p.nama_lengkap AS operator,
+                        'hilang' AS jenis
                     FROM barang_hilang bh
                     JOIN barang b ON bh.id_barang = b.id_barang
                     JOIN pengguna p ON bh.id_pengguna = p.id_pengguna
@@ -189,15 +207,6 @@ if ($jenis == 'masuk') {
             $tanggal_awal,
             $tanggal_akhir,
             $barang
-        ];
-    } else {
-        $params = [
-            $tanggal_awal,
-            $tanggal_akhir,
-            $tanggal_awal,
-            $tanggal_akhir,
-            $tanggal_awal,
-            $tanggal_akhir
         ];
     }
 
@@ -331,22 +340,20 @@ $barang_list = $pdo->query("SELECT id_barang, kode_barang, nama_barang FROM bara
                                                 <?php foreach ($transaksi as $key => $item): ?>
                                                     <tr>
                                                         <td><?= $key + 1 ?></td>
-                                                        <td><?= isset($item['tanggal']) ? date('d/m/Y', strtotime($item['tanggal'])) : 'N/A' ?></td>
+                                                        <td><?= date('d/m/Y', strtotime($item['tanggal'])) ?></td>
                                                         <td>
                                                             <span class="badge bg-<?=
-                                                                                    isset($item['jenis']) ?
-                                                                                        ($item['jenis'] == 'masuk' ? 'success' : ($item['jenis'] == 'keluar' ? 'warning' : 'danger'))
-                                                                                        : 'secondary'
+                                                                                    $item['jenis'] == 'masuk' ? 'success' : ($item['jenis'] == 'keluar' ? 'warning' : 'danger')
                                                                                     ?>">
-                                                                <?= isset($item['jenis']) ? ucfirst($item['jenis']) : 'N/A' ?>
+                                                                <?= ucfirst($item['jenis']) ?>
                                                             </span>
                                                         </td>
-                                                        <td><?= $item['kode_barang'] ?? '-' ?></td>
-                                                        <td><?= $item['nama_barang'] ?? '-' ?></td>
-                                                        <td><?= $item['jumlah'] ?? '0' ?></td>
-                                                        <td><?= $item['keterangan'] ?? '-' ?></td>
-                                                        <td><?= $item['nama_supplier'] ?? '-' ?></td>
-                                                        <td><?= $item['operator'] ?? '-' ?></td>
+                                                        <td><?= $item['kode_barang'] ?></td>
+                                                        <td><?= $item['nama_barang'] ?></td>
+                                                        <td><?= $item['jumlah'] ?></td>
+                                                        <td><?= $item['keterangan'] ?></td>
+                                                        <td><?= $item['nama_supplier'] ?></td>
+                                                        <td><?= $item['operator'] ?></td>
                                                     </tr>
                                                 <?php endforeach; ?>
                                             <?php endif; ?>
