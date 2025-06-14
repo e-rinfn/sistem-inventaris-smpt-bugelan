@@ -128,12 +128,12 @@ $barang_hilang = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 </a>
 
                                                                 <!-- Tombol Hapus -->
-                                                                <a href="hapus.php?id=<?= $item['id_hilang'] ?>"
+                                                                <!-- <a href="hapus.php?id=<?= $item['id_hilang'] ?>"
                                                                     class="btn btn-danger"
                                                                     title="Hapus laporan"
                                                                     onclick="return confirm('Apakah Anda yakin ingin menghapus laporan ini? Data yang dihapus tidak dapat dikembalikan.')">
                                                                     <i class="bx bx-trash"></i>
-                                                                </a>
+                                                                </a> -->
                                                             </div>
                                                         <?php endif; ?>
                                                     </td>

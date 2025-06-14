@@ -117,7 +117,11 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
                         </div>
 
                         <?php if (isset($_GET['success'])): ?>
-                            <div class="alert alert-success"><?= $_GET['success'] ?></div>
+                            <div class="alert alert-success"><?= htmlspecialchars($_GET['success']) ?></div>
+                        <?php endif; ?>
+
+                        <?php if (isset($_GET['error'])): ?>
+                            <div class="alert alert-danger"><?= htmlspecialchars($_GET['error']) ?></div>
                         <?php endif; ?>
 
                         <div class="card">
@@ -167,9 +171,9 @@ $transaksi = $pdo->query($query)->fetchAll(PDO::FETCH_ASSOC); ?>
                                                             <a href="../kembali/tambah.php?id=<?= $trx['id_keluar'] ?>" class="btn btn-success" title="Kembalikan">
                                                                 <i class="bx bx-undo"></i>
                                                             </a>
-                                                            <a href="hapus.php?id=<?= $trx['id_keluar'] ?>" class="btn btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus data ini? Stok barang akan ditambahkan kembali.')">
+                                                            <!-- <a href="hapus.php?id=<?= $trx['id_keluar'] ?>" class="btn btn-danger" title="Hapus" onclick="return confirm('Yakin ingin menghapus data ini? Stok barang akan ditambahkan kembali.')">
                                                                 <i class="bx bx-trash"></i>
-                                                            </a>
+                                                            </a> -->
                                                         </div>
                                                     </td>
                                                 </tr>

@@ -101,7 +101,7 @@ $transaksi_hilang->execute([$id_barang]);
                                 <!-- ... -->
 
                                 <div class="alert alert-danger">
-                                    <strong>Peringatan!</strong> Anda harus menghapus semua transaksi terkait terlebih dahulu sebelum dapat menghapus barang ini.
+                                    <strong>Peringatan!</strong> Anda harus menghapus barang karena terdapat transaksi terkait dengan barang ini.
                                 </div>
 
                                 <div class="d-flex justify-content-between">
